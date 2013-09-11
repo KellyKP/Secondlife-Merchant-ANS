@@ -15,6 +15,10 @@ this so far includes:
 2. basic in-world vendor script
 3. SQL file for database
 
+Don't have a web server?
+=======================
+If you don't have a web server, and want one, there is free hosting at http://x10hosting.com/ This is the host I use.
+
 Instructions
 =======================
 1. import the sql table
