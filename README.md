@@ -28,3 +28,7 @@ Instructions
 4. copy-paste ANSVendor.lsl into a script in SL and save it, setting the object description for price, and placing an object alongside the new script.
 5. change ANS info on marketplace to URL of where your ans.php is located
 6. test a sale in-world and on marketplace, if all goes well, you are done.
+
+About translog.php
+=======================
+translog.php is a simple and optional viewer for your transaction logs, it will show an avatar image of buyer, tell you calculated profit (taking care of marketplace fees), tell you if purchase was gift or not, and also tell you where sale took place.
