@@ -14,10 +14,23 @@
  	$tReceiverKey = $_GET['ReceiverKey'];
 	$tPaymentGross = $_GET['PaymentGross'];
  	$tLocation = $_GET['Location'];
+if ($tLocation != 'In-World')
+	$tLocation = 'Marketplace';
 
 if ($tPaymentGross != '0')
 {   
-$sql="INSERT INTO ANS VALUES ('','$Timestamp','$tTransactionID','$tItemID','$tItemName','$tMerchantName','$tPayerName','$tPayerKey','$tReceiverName','$tReceiverKey','$tPaymentGross','$tLocation')";
+$sql="INSERT INTO ANS VALUES ('','$Timestamp',
+'$tTransactionID',
+'$tItemID',
+'$tItemName',
+'$tMerchantName',
+'$tPayerName',
+'$tPayerKey',
+'$tReceiverName',
+'$tReceiverKey',
+'$tPaymentGross',
+'$tLocation'
+)";
 $result=mysql_query($sql) or die(mysql_error());
 }
 
