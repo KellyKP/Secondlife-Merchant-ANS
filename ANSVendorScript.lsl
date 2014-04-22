@@ -5,6 +5,11 @@ integer TransID = 2345;
 string url = "http://example.com/ans.php"; // URL of your ANS script
 key reqid; //ANS request ID
 
+//If you want split profit, change share to TRUE then add key to ShareWith
+integer share = FALSE;// TRUE or FALSE
+key ShareWith = "59cfdfae-167b-4a3d-85a9-0e824df1872d";// Key of friend
+integer cut = 5; // Percentage cut
+
 //Save system
 SaveToANS(string TransactionID, string ItemID, string ItemName, string PayerName, key PayerKey, string ReceiverName, key ReceiverKey, string MerchantName, integer PaymentGross, string Location)
 {
@@ -28,8 +33,10 @@ default
     state_entry()
     {
         price = (integer)llGetObjectDesc();
-        product = llGetInventoryName(INVENTORY_OBJECT, 0);
+        product = llGetObjectName();
         llSetPayPrice(PAY_HIDE,[price,PAY_HIDE,PAY_HIDE,PAY_HIDE]);
+        if (share == TRUE)
+        llRequestPermissions(llGetOwner(),PERMISSION_DEBIT);
     }
 
     http_response(key request_id, integer status, list metadata, string body)
@@ -43,22 +50,38 @@ default
             llOwnerSay("you've sold "+product+" for "+(string)price+"L$,it was successfully added to ANS records.");
         }
     }
-        
+    
     money(key id,integer amnt)
     {
-        llGiveInventory(id,product);
-        llInstantMessage(id,"Thank you "+llKey2Name(id)+" for your purchase, look for an Object named \""+product+"\" in your inventory Objects folder");
+        
+    //
+
+                string InvenName;
+                integer InvenNumber = llGetInventoryNumber(INVENTORY_ALL);
+                list InvenList = [];
+                integer y;
+                for(y = 0; y < InvenNumber; y++)
+                {
+                    InvenName = llGetInventoryName(INVENTORY_ALL, y);
+                    if(InvenName != llGetScriptName()) InvenList += [InvenName];
+                }
+                llGiveInventoryList(id,product, InvenList);
+                if (share == TRUE)
+                llGiveMoney(ShareWith,(amnt*cut)/100);
+
+    //
+        llInstantMessage(id,"Thank you "+llKey2Name(id)+" for your purchase, look for a folder named \""+product+"\" in your recent items.");
 
         //Collects info for transaction, and prepares for saving.
         TransID = TransID += 1;
         string lTransactionID = (string)TransID;
         string lItemID = ProductID;
         string lItemName = product;
-        string lPayerName = llKey2Name(id);
+        string lPayerName = llEscapeURL(llKey2Name(id));
         key lPayerKey = id;
-        string lReceiverName = llKey2Name(id);
+        string lReceiverName = llEscapeURL(llKey2Name(id));
         key lReceiverKey = id;
-        string lMerchantName = llKey2Name(llGetOwner());
+        string lMerchantName = llEscapeURL(llKey2Name(llGetOwner()));
         integer lPaymentGross = price;
         string lLocation = "In-World";
 
